@@ -15,7 +15,6 @@ const Menu = (props) => {
   return (
     <Router>
     <>
-      {/* <>{notification}</> */}
     <div>
       <Link style={padding} to="/">anecdotes</Link>
       <Link style={padding} to="/create">create new</Link>
