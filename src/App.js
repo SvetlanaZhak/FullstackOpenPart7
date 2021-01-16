@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
    Route, Link,   Redirect,  useHistory, useRouteMatch
 } from "react-router-dom"
-
+import { useField } from "./hooks";
 
 const Menu = (props) => {
 
@@ -91,26 +91,36 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [info, setInfo] = useState('')
-  const [author, setAuthor] = useState('')
+  // const [content, setContent] = useState('')
+  // const [info, setInfo] = useState('')
+  // const [author, setAuthor] = useState('') 
+  
   const {setNewAnecdote, setNotification} = props
-  console.log(setNewAnecdote, "PROPS")
+
 
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.createNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     // props.history.push('/')
     setNewAnecdote(true);
-    setNotification(`A new anecdote '${content}' has been created`);
+    setNotification(`A new anecdote '${content.value}' has been created`);
     setTimeout(() => {setNotification("") }, 10000)
   }
+  const handleReset =(e) => {
+    e.preventDefault();
+    setContent();
+    setAuthor();
+    setInfo()
+  }
+  const{reset: setContent, ...content}  = useField("text");
+  const {reset: setAuthor, ...author} = useField("text");
+  const {reset: setInfo, ...info}= useField("text");
 
   // const Users = () => (
   //   <div>
@@ -137,17 +147,19 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} />
+          
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
